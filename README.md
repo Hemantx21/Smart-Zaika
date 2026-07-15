@@ -106,13 +106,21 @@ There are no test scripts included by default. Add tests or linters as needed.
 
 The app uses a prominent hero header on the homepage with a background image, the site title "Smart-Zaika", a search input (placeholder: "egg, tomato, basil...") and a red "Generate" button. The top navigation contains the site logo and links (Recipes, About, Contact) and authentication links (Login, Register).
 
-To include a screenshot in the README, add the image file to `public/images/` (for example `public/images/ui-home.png`) and include it like this:
+Below are screenshots of the UI. Files are stored in `public/images/`.
 
-```markdown
-![Homepage screenshot](public/images/ui-home.png)
-```
+Homepage hero (search):
 
-This screenshot shows the hero search UI and the navigation layout.
+![Homepage hero screenshot](public/images/ui-footer.svg)
+
+Login view:
+
+![Login screenshot](public/images/ui-login.svg)
+
+Register view:
+
+![Register screenshot](public/images/ui-register.svg)
+
+Replace these files in `public/images/` with higher-resolution PNG/JPG screenshots if you prefer.
 
 ---
 
