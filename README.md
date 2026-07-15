@@ -41,6 +41,8 @@ Create a `.env` file in the project root with at least:
 - `MONGO_URI` — MongoDB connection string
 - `SESSION_SECRET` — session cookie secret
 - `OPENAI_API_KEY` (optional) — if AI generation uses OpenAI or similar
+ - `SPOONACULAR_API_KEY` — required for Spoonacular-based recipe generation (recommended)
+ - `OPENAI_API_KEY` (optional) — only needed if you enable the OpenAI-based generator in `server.js`
 
 ## Install
 
@@ -122,6 +124,20 @@ Register view:
 ![Register screenshot](public/images/ui-register.png)
 
 Replace these files in `public/images/` with higher-resolution PNG/JPG screenshots if you prefer.
+
+## Spoonacular API (recipe generation)
+
+- This project uses the Spoonacular API for recipe discovery and generation in `routes/aiRoutes.js`.
+- Set your Spoonacular API key in the environment variable `SPOONACULAR_API_KEY` (or `SPOON_API_KEY`) before running the app.
+- There are helper endpoints under `/api/ai`:
+	- `POST /api/ai/generate` — body `{ ingredients: "egg, tomato" }` returns suggested recipes (or accepts `dishId` to fetch full recipe).
+	- `POST /api/ai/suggest` — body `{ ingredients }` returns lightweight suggestions.
+	- `POST /api/ai/recipe` — body `{ id }` returns full recipe details.
+	- `GET /api/ai/testKey` — validates your Spoonacular API key.
+
+Notes:
+- Keep your `.env` local and do not commit it. `.gitignore` already excludes `.env`.
+- If a secret was previously committed, rotate the key immediately and remove it from git history (a local cleanup was performed in this repo; see commit log).
 
 ---
 
