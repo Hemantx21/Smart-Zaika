@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900">
+  <rect width="100%" height="100%" fill="#f8f9fa"/>
+  <rect x="250" y="80" width="700" height="740" rx="12" fill="#fff" stroke="#eee"/>
+  <text x="600" y="160" font-family="Arial, Helvetica, sans-serif" font-size="36" text-anchor="middle" fill="#333">Create your account</text>
+  <rect x="330" y="230" width="540" height="48" rx="8" fill="#fff" stroke="#e9ecef"/>
+  <rect x="330" y="300" width="540" height="48" rx="8" fill="#fff" stroke="#e9ecef"/>
+  <rect x="330" y="370" width="540" height="48" rx="8" fill="#fff" stroke="#e9ecef"/>
+  <rect x="330" y="620" width="540" height="56" rx="10" fill="#d7393c"/>
+  <text x="600" y="655" font-family="Arial, Helvetica, sans-serif" font-size="20" text-anchor="middle" fill="#fff">Create account</text>
+  <text x="600" y="825" font-family="Arial, Helvetica, sans-serif" font-size="12" text-anchor="middle" fill="#999">Placeholder: replace with actual screenshot (ui-register)</text>
+</svg>
