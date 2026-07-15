@@ -42,7 +42,6 @@ Create a `.env` file in the project root with at least:
 - `SESSION_SECRET` — session cookie secret
 - `OPENAI_API_KEY` (optional) — if AI generation uses OpenAI or similar
  - `SPOONACULAR_API_KEY` — required for Spoonacular-based recipe generation (recommended)
- - `OPENAI_API_KEY` (optional) — only needed if you enable the OpenAI-based generator in `server.js`
 
 ## Install
 

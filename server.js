@@ -4,7 +4,6 @@
 import express from "express";
 import path from "path";
 import dotenv from "dotenv";
-import OpenAI from "openai"; //  modern OpenAI SDK
 import cors from "cors";
 import bodyParser from "body-parser";
 import session from "express-session";
@@ -35,12 +34,6 @@ mongoose
   .then(() => console.log(" MongoDB connected"))
   .catch((err) => console.error(" MongoDB connection error:", err));
 
-// ---------------------------
-// OpenAI Client
-// ---------------------------
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
 
 // ---------------------------
 // Middleware
@@ -120,36 +113,8 @@ app.get('/saved-recipes', async (req, res) => {
   }
 });
 
-// ---------------------------
-// AI Recipe Generator Route
-// ---------------------------
-app.post("/api/ai/generate", async (req, res) => {
-  try {
-    const { ingredients } = req.body;
-    if (!ingredients || ingredients.trim() === "") {
-      return res.status(400).json({ error: "Ingredients are required" });
-    }
-
-    const prompt = `Generate a recipe using the following ingredients: ${ingredients}.
-    Provide the recipe title, ingredients list, and step-by-step instructions.`;
-
-    const response = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo", // or "gpt-4o-mini"
-      messages: [{ role: "user", content: prompt }],
-      max_tokens: 500,
-    });
-
-    const recipe = response.choices[0].message?.content?.trim();
-    if (!recipe) {
-      return res.status(500).json({ error: "No recipe generated" });
-    }
-
-    res.json({ recipe });
-  } catch (error) {
-    console.error("❌ Error generating recipe:", error);
-    res.status(500).json({ error: "Failed to generate recipe" });
-  }
-});
+// Note: AI generation is handled by `routes/aiRoutes.js` (Spoonacular).
+// The OpenAI-based generator was removed to rely on Spoonacular only.
 
 // ---------------------------
 // Recipes page
