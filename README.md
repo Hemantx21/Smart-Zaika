@@ -108,17 +108,18 @@ The app uses a prominent hero header on the homepage with a background image, th
 
 Below are screenshots of the UI. Files are stored in `public/images/`.
 
+
 Homepage hero (search):
 
-![Homepage hero screenshot](public/images/ui-footer.svg)
+![Homepage hero screenshot](public/images/ui-footer.png)
 
 Login view:
 
-![Login screenshot](public/images/ui-login.svg)
+![Login screenshot](public/images/ui-login.png)
 
 Register view:
 
-![Register screenshot](public/images/ui-register.svg)
+![Register screenshot](public/images/ui-register.png)
 
 Replace these files in `public/images/` with higher-resolution PNG/JPG screenshots if you prefer.
 

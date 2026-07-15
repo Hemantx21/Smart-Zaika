@@ -1,0 +1,43 @@
+<%- include('partials/head') %>
+
+<div class="container py-5">
+  <div class="row g-4">
+    <!-- Main Recipe Card -->
+    <div class="col-md-8">
+      <div class="card shadow-sm border-0 rounded-3">
+        <img src="<%= recipe.image || '/images/placeholder.jpg' %>" 
+             class="card-img-top rounded-top" 
+             alt="<%= recipe.title %>" 
+             style="object-fit: cover; max-height: 400px;">
+        <div class="card-body">
+          <h2 class="card-title fw-bold text-danger"><%= recipe.title %></h2>
+          <p class="text-muted small mb-4">
+           
+          </p>
+          <h5 class="fw-semibold mt-3">Ingredients</h5>
+          <ul class="list-unstyled ms-2">
+            <% (recipe.ingredients || []).forEach(function(i){ %>
+              <li>🍴 <%= i %></li>
+            <% }) %>
+          </ul>
+
+          <h5 class="fw-semibold mt-4">Directions</h5>
+          <p class="lh-lg"><%= recipe.instructions || 'No instructions provided.' %></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-md-4">
+      <div class="card p-3 shadow-sm border-0 rounded-3">
+        <h6 class="text-muted">Save & Share</h6>
+        <div class="d-grid gap-2 mt-3">
+          <button class="btn btn-danger">❤️ Save Recipe</button>
+          <a class="btn btn-outline-secondary" href="/recipes">← Back to Recipes</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

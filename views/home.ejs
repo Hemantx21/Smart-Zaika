@@ -1,0 +1,266 @@
+<%- include('partials/head') %>
+
+<section class="hero hero-centered">
+  <div class="hero-bg" style="background-image: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=2000&q=80');"></div>
+  <div class="hero-overlay"></div>
+
+  <div class="container h-100">
+    <div class="row h-100 justify-content-center align-items-center text-center">
+      <div class="col-lg-8">
+          <% if (user) { %>
+            <h3 class="text-light mb-2">Welcome back, <%= user.name %>!</h3>
+          <% } %>
+          <h1 class="hero-logo">Smart-Zaika</h1>
+          <p class="lead">Discover, manage, and create amazing recipes with AI-powered intelligence.</p>
+
+          <form id="searchForm" class="row g-2 align-items-center justify-content-center">
+            <div class="col-9 col-md-7">
+              <input id="ingredients" name="ingredients" class="form-control form-control-lg" placeholder="egg, tomato, basil..." />
+            </div>
+            <div class="col-3 col-md-2 d-grid">
+              <button type="submit" id="generateBtn" class="btn btn-primary btn-lg">Generate</button>
+            </div>
+          </form>
+          <!-- Recipe result will be injected here -->
+          <div id="recipeResult" class="mt-4 text-start" style="max-width:840px;margin:18px auto 0;z-index:3;"></div>
+          <!-- Cuisine chooser (hidden until user submits ingredients) -->
+          <div id="cuisineChooser" class="mt-3 text-center" style="display:none; z-index:4;">
+            <p class="text-muted">Choose a cuisine to refine the recipe:</p>
+            <div class="d-flex gap-2 justify-content-center flex-wrap" id="cuisineList">
+              <!-- Cuisine buttons inserted by JS -->
+            </div>
+            <div class="mt-2"><button id="cuisineCancel" class="btn btn-link text-white">Cancel</button></div>
+          </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="container mt-5">
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="card p-3 card-recipe">
+        <div class="card-body">
+          <h5 class="card-title text-brand">Quick Meals</h5>
+          <p class="card-text text-muted small">Discover recipes that are quick and easy to prepare.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card p-3 card-recipe">
+        <div class="card-body">
+          <h5 class="card-title text-brand">Healthy Options</h5>
+          <p class="card-text text-muted small">Find recipes tailored to your dietary preferences.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card p-3 card-recipe">
+        <div class="card-body">
+          <h5 class="card-title text-brand">World Cuisine</h5>
+          <p class="card-text text-muted small">Explore recipes from around the globe.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>
+
+<script>
+  const form = document.getElementById("searchForm");
+  const input = document.getElementById("ingredients");
+  const resultDiv = document.getElementById("recipeResult");
+
+  const recipeResult = document.getElementById('recipeResult');
+  // Track last generated recipe so user can save it
+  let lastGeneratedDishId = null;
+  let lastGeneratedRecipeText = null;
+
+  async function saveRecipePayload(payload) {
+    const res = await fetch('/api/recipes/save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    if (res.status === 401) { alert('Please log in to save recipes'); window.location.href = '/login'; return; }
+    if (!res.ok) {
+      const txt = await res.text().catch(() => res.statusText || 'Error');
+      throw new Error(txt || `Status ${res.status}`);
+    }
+    alert('Saved to your collection');
+  }
+
+  function attachSaveButton() {
+    // remove existing save button
+    const existing = document.getElementById('saveGeneratedBtnHome');
+    if (existing) existing.remove();
+    const container = recipeResult.querySelector('.p-4') || recipeResult;
+    if (!container) return;
+    const btn = document.createElement('button');
+    btn.id = 'saveGeneratedBtnHome';
+    btn.className = 'btn btn-sm btn-success mt-3';
+    btn.innerText = 'Save Recipe';
+    btn.addEventListener('click', async () => {
+      btn.disabled = true;
+      const orig = btn.innerText;
+      btn.innerText = 'Saving...';
+      try {
+        if (lastGeneratedDishId) {
+          const r = await fetch('/api/ai/recipe', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: lastGeneratedDishId }) });
+          if (r.status === 401) { alert('Please log in to save recipes'); window.location.href = '/login'; return; }
+          if (!r.ok) throw new Error('Failed to fetch recipe details');
+          const d = await r.json();
+          const recipe = d.recipe;
+          await saveRecipePayload({ title: recipe.title, image: recipe.image, ingredients: recipe.ingredients, instructions: recipe.instructions, sourceId: recipe.id });
+        } else if (lastGeneratedRecipeText) {
+          const lines = lastGeneratedRecipeText.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+          const title = (lines.length && lines[0].length < 80) ? lines[0] : 'Generated Recipe';
+          const ingredients = [];
+          for (const ln of lines) {
+            if (/ingredient/i.test(ln) || /^[-*\d\.]+\s+/.test(ln) || /\b(tsp|tbsp|cup|gram|g|kg|oz)\b/i.test(ln)) ingredients.push(ln.replace(/^[-*\d\.]+\s*/, ''));
+          }
+          await saveRecipePayload({ title, image: '', ingredients, instructions: lastGeneratedRecipeText, sourceId: '' });
+        } else {
+          alert('Nothing to save');
+        }
+      } catch (err) {
+        console.error('Save error:', err);
+        alert('Failed to save recipe.');
+      } finally {
+        btn.disabled = false;
+        btn.innerText = orig;
+      }
+    });
+    container.appendChild(btn);
+  }
+
+  function showLoading(state) {
+    const btn = document.getElementById('generateBtn');
+    if (!btn) return;
+    btn.disabled = state;
+    btn.textContent = state ? 'Generating...' : 'Generate';
+  }
+
+  function renderRecipe(text) {
+    // Very small parser: try to split by title/ingredients/instructions if present
+    let html = '';
+    const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+
+    // If first non-empty line looks like a title (short), treat it specially
+    if (lines.length && lines[0].length < 60) {
+      html += `<h4 class=\"text-white\">${lines[0]}</h4>`;
+      lines.shift();
+    }
+
+    // Find an ingredients section (lines starting with - or * or numbers or containing 'ingredient')
+    const ingIndex = lines.findIndex(l => /ingredient/i.test(l) || /^[-*\d\.]+\s+/.test(l));
+    if (ingIndex >= 0) {
+      const ing = [];
+      for (let i = ingIndex; i < lines.length; i++) {
+        if (/instruction|step/i.test(lines[i])) break;
+        ing.push(lines[i]);
+      }
+      if (ing.length) {
+        html += '<h6 class=\"text-white mt-3\">Ingredients</h6><ul class=\"text-white small\">';
+        ing.forEach(item => html += `<li>${item.replace(/^[-*\d\.]+\s*/, '')}</li>`);
+        html += '</ul>';
+      }
+    }
+
+    // Everything else as instructions
+    html += '<h6 class=\"text-white mt-3\">Instructions</h6>';
+    html += '<div class=\"text-white small\">';
+    html += lines.join('<br/><br/>');
+    html += '</div>';
+
+    recipeResult.innerHTML = `<div class=\"p-4\" style=\"background:rgba(0,0,0,0.45);border-radius:12px;\">${html}</div>`;
+  }
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const ingredients = input.value.trim();
+    if (!ingredients) return;
+    // Step 1: ask for suggestions
+    try {
+      showLoading(true);
+      recipeResult.innerHTML = '';
+      const res = await fetch('/api/ai/suggest', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ingredients }),
+      });
+      const data = await res.json();
+      if (!res.ok || !Array.isArray(data.suggestions) || data.suggestions.length === 0) {
+        recipeResult.innerHTML = `<div class="alert alert-warning">No suggestions found. Generating a quick recipe instead.</div>`;
+        // fallback to original generation
+        const genRes = await fetch('/api/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ingredients }) });
+        const genData = await genRes.json();
+        if (genRes.ok && genData.recipe) {
+          lastGeneratedDishId = null;
+          lastGeneratedRecipeText = genData.recipe;
+          renderRecipe(genData.recipe);
+          attachSaveButton();
+        } else if (genRes.ok && Array.isArray(genData.recipes) && genData.recipes.length) {
+          // If server returned suggestions (recipes array), fetch detailed textual recipe for the first suggestion
+          const firstId = genData.recipes[0].id;
+          try {
+            const gen2 = await fetch('/api/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ingredients, dishId: firstId }) });
+            const gen2Data = await gen2.json();
+            if (gen2.ok && gen2Data.recipe) {
+              lastGeneratedDishId = firstId;
+              lastGeneratedRecipeText = gen2Data.recipe;
+              renderRecipe(gen2Data.recipe);
+              attachSaveButton();
+            } else recipeResult.innerHTML = `<div class="alert alert-danger">${gen2Data.error || 'No recipe generated'}</div>`;
+          } catch (err) {
+            console.error(err);
+            recipeResult.innerHTML = `<div class="alert alert-danger">Something went wrong</div>`;
+          }
+        } else {
+          recipeResult.innerHTML = `<div class="alert alert-danger">${genData.error || 'No recipe generated'}</div>`;
+        }
+      } else {
+        // show suggestions UI
+        const chooser = document.getElementById('cuisineChooser');
+        const list = document.getElementById('cuisineList');
+        list.innerHTML = '';
+        data.suggestions.forEach(s => {
+          const btn = document.createElement('button');
+          btn.className = 'btn btn-outline-light m-1';
+          btn.style.minWidth = '160px';
+          btn.textContent = s.title;
+          btn.onclick = async () => {
+            // generate using selected dish id
+              try {
+              showLoading(true);
+              chooser.style.display = 'none';
+              const gen = await fetch('/api/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ingredients, dishId: s.id }) });
+              const genData = await gen.json();
+              if (gen.ok && genData.recipe) {
+                lastGeneratedDishId = s.id;
+                lastGeneratedRecipeText = genData.recipe;
+                renderRecipe(genData.recipe);
+                attachSaveButton();
+              } else recipeResult.innerHTML = `<div class="alert alert-danger">${genData.error || 'No recipe generated'}</div>`;
+            } catch (err) {
+              console.error(err);
+              recipeResult.innerHTML = `<div class="alert alert-danger">Something went wrong</div>`;
+            } finally { showLoading(false); }
+          };
+          list.appendChild(btn);
+        });
+        chooser.style.display = 'block';
+      }
+    } catch (err) {
+      console.error(err);
+      recipeResult.innerHTML = `<div class="alert alert-danger">Something went wrong</div>`;
+    } finally {
+      showLoading(false);
+    }
+  });
+
+  // cancel chooser
+  document.getElementById('cuisineCancel')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    document.getElementById('cuisineChooser').style.display = 'none';
+  });
+</script>
+</body>
+</html>

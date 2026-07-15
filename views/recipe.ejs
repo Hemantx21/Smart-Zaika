@@ -1,0 +1,12 @@
+<%- include('partials/navbar') %>
+<div class="container mt-5">
+  <h2 class="text-center mb-4">AI Recipe Generator 🤖</h2>
+  <div class="card shadow p-4">
+    <label class="form-label fw-semibold">Enter ingredients (comma-separated):</label>
+    <textarea id="ingredients" class="form-control mb-3" rows="3" placeholder="e.g., tomato, cheese, bread"></textarea>
+    <button id="generateBtn" class="btn btn-success w-100">Generate Recipe</button>
+  </div>
+  <div id="result" class="mt-5 text-center"></div>
+</div>
+<script src="/js/ai.js"></script>
+<%- include('partials/footer') %>

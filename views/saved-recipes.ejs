@@ -1,0 +1,104 @@
+<%- include('partials/navbar') %>
+<link rel="stylesheet" href="/css/saved-recipes.css">
+
+<section class="hero hero-centered saved-hero">
+  <div class="hero-bg" style="background-image: url('/images/hero-saved.svg');"></div>
+  <div class="hero-overlay"></div>
+  <div class="container h-100">
+    <div class="row h-100 justify-content-center align-items-center text-center">
+      <div class="col-lg-8">
+        <h1 class="hero-title">Your Saved Recipes</h1>
+        <p class="lead text-muted">
+          Quickly access the recipes you've saved. Click <strong>View</strong> to read the full recipe or <strong>Delete</strong> to remove it from your collection.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<main class="container page-center mt-5">
+  <div class="row">
+    <div class="col-12">
+      <% if (!saved || saved.length === 0) { %>
+        <div class="empty-state text-center">
+          <img src="/images/hero-saved.svg" alt="No saved recipes">
+          <h4>No saved recipes yet</h4>
+          <p class="text-muted">Generate recipes from the homepage and click <strong>Save</strong> to keep them here.</p>
+          <a href="/" class="btn btn-primary mt-3">Generate Recipes</a>
+        </div>
+      <% } else { %>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div class="input-group search-bar">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input id="savedSearch" class="form-control" placeholder="Search saved recipes by title or ingredient...">
+          </div>
+          <button id="clearFilters" class="btn btn-outline-secondary">Clear</button>
+        </div>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4" id="savedGrid">
+          <% saved.forEach(function(r) { %>
+            <% const json = JSON.stringify(r).replace(/'/g, "&#39;"); %>
+            <div class="col">
+              <div class="card card-recipe saved-card h-100" data-recipe='<%- json %>'>
+                <% if (r.image) { %>
+                  <div class="card-img-top img-zoom">
+                    <img src="<%= r.image %>" alt="<%= r.title %>">
+                  </div>
+                <% } else { %>
+                  <div class="card-img-top placeholder">
+                    <i class="bi bi-journal-text"></i>
+                  </div>
+                <% } %>
+                <div class="card-body d-flex flex-column">
+                  <div class="d-flex justify-content-between align-items-start">
+                    <h5 class="card-title mb-1"><%= r.title %></h5>
+                    <small class="text-muted"><%= new Date(r.createdAt).toLocaleDateString() %></small>
+                  </div>
+                  <p class="card-text text-muted small mb-3">
+                    <%= (r.ingredients||[]).slice(0,3).join(', ') %>...
+                  </p>
+                  <div class="mt-auto d-flex gap-2">
+                    <button class="btn btn-sm btn-primary viewSaved" data-id="<%= r._id %>">View</button>
+                    <button class="btn btn-sm btn-outline-danger deleteSaved ms-auto" data-id="<%= r._id %>">Delete</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</main>
+
+<!-- Modal -->
+<div class="modal fade" id="savedRecipeModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="savedModalTitle"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-5">
+            <img id="savedModalImage" src="/images/placeholder.jpg" class="img-fluid rounded" alt="Recipe image">
+          </div>
+          <div class="col-md-7">
+            <h6>Ingredients</h6>
+            <ul id="savedModalIngredients" class="small text-muted"></ul>
+            <h6 class="mt-3">Instructions</h6>
+            <div id="savedModalInstructions" class="small text-muted"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger" id="modalDeleteBtn">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/saved-recipes.js"></script>
+<%- include('partials/footer') %>

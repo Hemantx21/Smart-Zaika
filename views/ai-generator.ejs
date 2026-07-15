@@ -1,0 +1,50 @@
+<%- include('partials/navbar') %>
+
+<div class="container" style="min-height:70vh;">
+  <div class="row justify-content-center align-items-center">
+    <div class="col-md-8">
+      <div class="card shadow-sm mt-5">
+        <div class="card-body p-4">
+          <h3 class="text-center text-brand">AI-Powered Recipe Generator</h3>
+          <p class="text-muted text-center">Enter ingredients to generate a recipe using AI.</p>
+
+          <form id="aiForm" class="mb-3">
+            <div class="mb-3">
+              <label for="ingredients" class="form-label">Ingredients</label>
+              <input id="ingredients" name="ingredients" type="text" class="form-control" placeholder="e.g., chicken, tomato, basil" required>
+              <div class="form-text">Enter comma-separated ingredients you have on hand.</div>
+            </div>
+
+            <div class="d-grid">
+              <button id="generateBtn" type="submit" class="btn btn-primary">Generate Suggestions</button>
+            </div>
+          </form>
+
+          <div id="generatedArea" class="mt-4 d-none">
+            <h5>Suggested Dishes</h5>
+            <div id="generatedResults" class="row g-3 mt-2"></div>
+          </div>
+
+          <div id="selectedRecipe" class="mt-4 d-none">
+            <h5 id="selectedTitle"></h5>
+            <div class="row">
+              <div class="col-md-4">
+                <img id="selectedImage" src="" alt="" class="img-fluid rounded">
+              </div>
+              <div class="col-md-8">
+                <h6>Ingredients</h6>
+                <ul id="selectedIngredients"></ul>
+                <h6>Instructions</h6>
+                <div id="selectedInstructions" class="text-muted"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <script src="/js/ai-generator.js"></script>
+
+<%- include('partials/footer') %>

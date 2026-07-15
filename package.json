@@ -1,0 +1,42 @@
+{
+  "name": "smart-zaika",
+  "version": "1.0.0",
+  "description": "Smart Zaika - AI-powered recipe and user platform built with Node.js, Express, MongoDB, and EJS.",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "lint": "eslint . --fix"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-session": "^1.18.2",
+    "mongoose": "^8.8.0",
+    "node-fetch": "^3.3.2",
+    "openai": "^6.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^9.14.0",
+    "nodemon": "^3.1.10"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "recipes",
+    "AI",
+    "express",
+    "nodejs",
+    "mongodb",
+    "ejs",
+    "smart-zaika"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}

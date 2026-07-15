@@ -1,0 +1,70 @@
+<%- include('partials/head') %>
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card p-4 shadow-sm border-0 rounded-3">
+        <h2 class="fw-bold text-danger">Contact Us</h2>
+        <p class="text-muted">Have feedback or need help? Send us a message.</p>
+
+        <form method="POST" action="/api/contact" novalidate>
+          <!-- Name -->
+          <div class="mb-3">
+            <label class="form-label small">Name</label>
+            <input 
+              name="name" 
+              class="form-control" 
+              placeholder="Your name"
+              value="<%= user && user.name ? user.name : '' %>"
+            >
+          </div>
+
+          <!-- Email -->
+          <div class="mb-3">
+            <label class="form-label small">Email</label>
+            <input 
+              name="email" 
+              type="email" 
+              class="form-control" 
+              placeholder="you@example.com"
+              value="<%= user && user.email ? user.email : '' %>"
+            >
+          </div>
+
+          <!-- Phone (required) -->
+          <div class="mb-3">
+            <label class="form-label small">Phone Number <span class="text-danger">*</span></label>
+            <input 
+              name="phone" 
+              type="tel" 
+              class="form-control" 
+              required 
+              placeholder="+91 9876543210"
+              value="<%= user && user.phone ? user.phone : '' %>"
+            >
+          </div>
+
+          <!-- Message (required) -->
+          <div class="mb-3">
+            <label class="form-label small">Message <span class="text-danger">*</span></label>
+            <textarea 
+              name="message" 
+              rows="5" 
+              class="form-control" 
+              required 
+              placeholder="How can we help?"
+            ></textarea>
+          </div>
+
+          <!-- Buttons -->
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-danger">Send Message</button>
+            <a href="/" class="btn btn-outline-secondary">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

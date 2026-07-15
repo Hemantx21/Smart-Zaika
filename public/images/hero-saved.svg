@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="600" viewBox="0 0 1600 600">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1">
+      <stop offset="0" stop-color="#f8d7da"/>
+      <stop offset="1" stop-color="#fce9e8"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="600" fill="url(#g)" />
+  <g fill="#444" font-family="Inter, Arial" font-size="48" font-weight="700">
+    <text x="80" y="160">Saved Recipes</text>
+    <text x="80" y="220" font-size="20" font-weight="400">Your curated collection — quick access to meals you loved</text>
+  </g>
+</svg>

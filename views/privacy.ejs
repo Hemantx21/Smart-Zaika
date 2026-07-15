@@ -1,0 +1,35 @@
+<%- include('partials/head') %>
+
+<div class="container mt-5">
+  <div class="card p-4 shadow-sm">
+    <h1 class="text-brand">Privacy Policy</h1>
+    <p class="text-muted">Last updated: <%= new Date().getFullYear() %></p>
+
+    <p>Smart Zaika respects your privacy. This page explains what data we collect and how we use it.</p>
+
+    <h5 class="mt-3">Data we collect</h5>
+    <ul>
+      <li>Information you provide (account details, contact messages).</li>
+      <li>Usage data and analytics to improve the service.</li>
+    </ul>
+
+    <h5 class="mt-3">How we use data</h5>
+    <ul>
+      <li>To provide and improve the website and AI recipe generation.</li>
+      <li>To communicate with you about your account or requests.</li>
+    </ul>
+
+    <h5 class="mt-3">Third parties</h5>
+    <p class="text-muted">We may use third-party services (e.g. analytics, image hosting). We do not sell personal data.</p>
+
+    <h5 class="mt-3">Contact</h5>
+    <p>If you have privacy questions, email: <a href="mailto:privacy@smartzaika.example">privacy@smartzaika.example</a></p>
+
+    <div class="mt-4">
+      <a href="/" class="btn btn-outline-secondary">Home</a>
+      <a href="/contact" class="btn btn-outline-brand ms-2">Contact</a>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

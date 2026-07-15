@@ -1,0 +1,41 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm">
+  <div class="container">
+    <!-- Brand -->
+    <a class="navbar-brand" href="/">Smart-Zaika</a>
+
+    <!-- Mobile toggle -->
+    <button 
+      class="navbar-toggler" 
+      type="button" 
+      data-bs-toggle="collapse" 
+      data-bs-target="#navbarNav" 
+      aria-controls="navbarNav" 
+      aria-expanded="false" 
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+  <!-- Navbar links -->
+  <div class="collapse navbar-collapse" id="nav">
+      <!-- Left side -->
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" href="/recipes">Recipes</a></li>
+        <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="/contact">Contact</a></li>
+      </ul>
+
+      <!-- Right side -->
+      <ul class="navbar-nav ms-auto">
+        <% if (user) { %>
+          <!-- <li class="nav-item"><a class="nav-link" href="/ai/generator">Generate</a></li> -->
+          <li class="nav-item"><a class="nav-link" href="/saved-recipes">Saved</a></li>
+          <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+        <% } else { %>
+          <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+          <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
+        <% } %>
+      </ul>
+    </div>
+  </div>
+</nav>
